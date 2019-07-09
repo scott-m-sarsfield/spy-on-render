@@ -1,6 +1,6 @@
 {
   "name": "@scott-m-sarsfield/spy-on-render",
-  "version": "0.2.1",
+  "version": "0.2.3",
   "description": "stub react render in jasmine",
   "main": "index.js",
   "scripts": {
