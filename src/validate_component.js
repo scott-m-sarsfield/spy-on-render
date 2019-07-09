@@ -1,5 +1,5 @@
 function getDisplayName(componentClass) {
-  return componentClass.displayName || componentClass.name;
+  return componentClass.displayName || componentClass.name || 'Component';
 }
 
 function validateComponent(component) {
