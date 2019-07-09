@@ -1,6 +1,6 @@
 {
-  "name": "spy-on-render",
-  "version": "0.2.0",
+  "name": "@scott-m-sarsfield/spy-on-render",
+  "version": "0.2.1",
   "description": "stub react render in jasmine",
   "main": "index.js",
   "scripts": {
@@ -8,18 +8,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/atomanyih/spy-on-render.git"
+    "url": "git+https://github.com/scott-m-sarsfield/spy-on-render.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/atomanyih/spy-on-render/issues"
+    "url": "https://github.com/scott-m-sarsfield/spy-on-render/issues"
   },
   "keywords": [
     "jasmine",
     "react"
   ],
-  "homepage": "https://github.com/atomanyih/spy-on-render#readme",
+  "homepage": "https://github.com/scott-m-sarsfield/spy-on-render#readme",
   "devDependencies": {
     "babel": "^6.3.26",
     "babel-core": "^6.4.0",

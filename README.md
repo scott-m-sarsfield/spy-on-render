@@ -1,9 +1,11 @@
-# spy-on-render [![Build Status](https://snap-ci.com/atomanyih/spy-on-render/branch/master/build_image)](https://snap-ci.com/atomanyih/spy-on-render/branch/master)
+# @scott-m-sarsfield/spy-on-render
 
 
 Spy on React components in Jasmine tests.
 
 **DOES NOT WORK WITH FUNCTIONAL COMPONENTS**. They're functions!
+
+**HOWEVER, I'VE ADDED SOME USEFUL ERROR MESSAGES.**
 
 ## Installation
 
@@ -66,3 +68,16 @@ what props were rendered at some other point in time?
 ```js
 propsOnRenderAt(Component, i)
 ```
+
+### Contributing
+
+If you need to publish the package,
+
+```bash
+gulp build
+cd dist
+npm publish
+
+```
+
+(don't forget to increment the version)
