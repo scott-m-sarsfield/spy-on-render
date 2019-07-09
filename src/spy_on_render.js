@@ -1,19 +1,20 @@
+const {getDisplayName, validateComponent} = require('./validate_component');
+
 const REACT_LIFECYCLE_METHODS = [
   'componentWillMount',
   'componentDidMount',
   'componentWillReceiveProps',
-  // 'shouldComponentUpdate',
   'componentWillUpdate',
   'componentDidUpdate',
   'componentWillUnmount'
 ];
 
-function getDisplayName(componentClass) {
-  return componentClass.displayName || componentClass.name;
-}
-
 module.exports = {
   spyOnRender(componentClass) {
+    if (!componentClass.prototype.render) {
+      throw new Error('<spyOnRender> : ' + getDisplayName(componentClass) + ' is not a class-based component.');
+    }
+
     REACT_LIFECYCLE_METHODS.forEach((methodName) => {
       if(componentClass.prototype[methodName]) {
         spyOn(componentClass.prototype, methodName)
@@ -25,31 +26,38 @@ module.exports = {
   customMatchers: {
     toHaveBeenRenderedWithProps(util, customEqualityTesters) {
       return {
-        compare(actual, expected) {
+        compare: function compare(actual, expected) {
           let result = {};
 
-          const propsByRender = actual.prototype.render.calls.all()
-            .map(({object: {props}}) => props);
+          let displayClass = getDisplayName(actual);
 
-          const matchingProps = propsByRender.find((props) => {
-            return util.equals(
-              props,
-              expected,
-              customEqualityTesters
-            );
+          try {
+            validateComponent(actual);
+          } catch (err) {
+            result.pass = false;
+            result.message = err.message;
+            return result;
+          }
+
+          let propsByRender = actual.prototype.render.calls.all().map(function(_ref) {
+            let props = _ref.object.props;
+            return props;
           });
 
-          const displayClass = getDisplayName(actual);
-          const displayExpected = jasmine.pp(expected);
+          let matchingProps = propsByRender.find(function(props) {
+            return util.equals(props, expected, customEqualityTesters);
+          });
+
+          let displayExpected = jasmine.pp(expected);
 
           if (matchingProps) {
             result.pass = true;
-            result.message = `Expected ${displayClass} not to have been rendered with props ${displayExpected}`;
+            result.message = 'Expected ' + displayClass + ' not to have been rendered with props ' + displayExpected;
           } else {
             result.pass = false;
-            const displayActual = jasmine.pp(propsByRender);
+            let displayActual = jasmine.pp(propsByRender);
 
-            result.message = `Expected ${displayClass} to have been rendered with props ${displayExpected}, but got ${displayActual}`;
+            result.message = 'Expected ' + displayClass + ' to have been rendered with props ' + displayExpected + ', but got ' + displayActual;
           }
 
           return result;
@@ -58,19 +66,27 @@ module.exports = {
     },
     toHaveBeenRendered() {
       return {
-        compare(actual) {
+        compare: function compare(actual) {
           let result = {};
 
-          const mostRecentCall = actual.prototype.render.calls.mostRecent();
+          let displayClass = getDisplayName(actual);
 
-          const displayClass = getDisplayName(actual);
+          try {
+            validateComponent(actual);
+          } catch (err) {
+            result.pass = false;
+            result.message = err.message;
+            return result;
+          }
 
-          if(mostRecentCall) {
+          let mostRecentCall = actual.prototype.render.calls.mostRecent();
+
+          if (mostRecentCall) {
             result.pass = true;
-            result.message = `Expected ${displayClass} not to have been rendered`;
+            result.message = 'Expected ' + displayClass + ' not to have been rendered';
           } else {
             result.pass = false;
-            result.message = `Expected ${displayClass} to have been rendered`;
+            result.message = 'Expected ' + displayClass + ' to have been rendered';
           }
 
           return result;
